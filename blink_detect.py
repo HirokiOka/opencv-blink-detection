@@ -5,6 +5,11 @@ import dlib
 from imutils import face_utils
 
 cap = cv2.VideoCapture(0)
+f = int(cap.get(cv2.CAP_PROP_FPS))
+w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+writer = cv2.VideoWriter('output.mp4', fourcc, f, (w, h))
 face_cascade = cv2.CascadeClassifier('./haarcascaede_frontalface_alt2.xml')
 face_parts_detector = dlib.shape_predictor('./shape_predictor_68_face_landmarks.dat')
 cvFont = cv2.FONT_HERSHEY_PLAIN
@@ -78,6 +83,7 @@ def main():
 
         show_params(eye_state, tick, rgb, blink_count)
         cv2.imshow('frame', rgb)
+        writer.write(rgb)
 
         if cv2.waitKey(1) == 27:
             break
@@ -86,4 +92,5 @@ def main():
 if __name__ == '__main__':
     main()
     cap.release()
+    writer.release()
     cv2.destroyAllWindows()
